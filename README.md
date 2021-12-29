@@ -1,4 +1,8 @@
-# Getting Started
+This is an golang concurrent-queue and concurrent-stack lib.
+***
+  
+
+## Getting Started
 ### Pull in the dependency
 ```zsh
 go get github.com/boobusy/vector
@@ -12,7 +16,7 @@ import (
 ```
 
 
-###Simple
+### Simple
 ```go
 func main() {
 	for i := 0; i < 100; i++ {
@@ -28,7 +32,7 @@ func main() {
 
 }
 ```
-###goroutine safe
+### thread-safe
 ```go
 func main() {
 
