@@ -30,7 +30,14 @@ func New(size int) *vector {
 
 // Len returns the number of items.
 func (v *vector) Len() int {
-	return len(v.items)
+	var l int
+	v.w <- func() {
+		defer v.rChan()
+
+		 l = len(v.items)
+	}
+	<-v.r
+	return l
 }
 
 // Cap returns the capacity of items.
@@ -57,6 +64,7 @@ func (v *vector) Push(item any) {
 // Remake items size
 func (v *vector) Remake(items []any) {
 	v.w <- func() {
+		v.items = nil
 		v.items = items
 	}
 }
