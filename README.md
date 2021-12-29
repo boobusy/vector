@@ -1,4 +1,4 @@
-This is an golang concurrent-queue and concurrent-stack lib.
+This is an concurrent-queue and concurrent-stack lib for the go.
 ***
   
 
