@@ -1,8 +1,16 @@
 package vector
 
-var (
-	defautlVector = New(1<<7 - 1)
+import (
+	"time"
 )
+
+var (
+	defautlVector = New(1 << 10)
+)
+
+func init() {
+	defautlVector.UsePurge(1<<20, 10*time.Millisecond)
+}
 
 // Len returns the number of items.
 func Len() int {
@@ -41,4 +49,8 @@ func PopFront() any {
 // PopBack returns the last val of items.
 func PopBack() any {
 	return defautlVector.PopBack()
+}
+
+func UsePurge(maxSize int, interval time.Duration) {
+	defautlVector.UsePurge(maxSize, interval)
 }

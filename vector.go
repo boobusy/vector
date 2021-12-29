@@ -2,6 +2,7 @@ package vector
 
 import (
 	"runtime"
+	"time"
 )
 
 type (
@@ -14,7 +15,6 @@ type (
 
 	any = interface{}
 )
-
 
 func New(size int) *vector {
 	v := &vector{
@@ -83,7 +83,7 @@ func (v *vector) PopBack() (w any) {
 		defer v.rChan()
 
 		l := len(v.items) - 1
-		if l < 1 {
+		if l < 0 {
 			return
 		}
 		w = v.items[l]
@@ -92,6 +92,19 @@ func (v *vector) PopBack() (w any) {
 	}
 	<-v.r
 	return
+}
+
+// open auto purge
+func (v *vector) UsePurge(maxSize int, interval time.Duration) {
+	go func() {
+		ch := time.NewTicker(interval)
+		for {
+			<-ch.C
+			if v.Len() == 0 && v.Cap() > maxSize {
+				v.Remake(make([]any, 0, v.size))
+			}
+		}
+	}()
 }
 
 func (v *vector) syncSliceData() {
