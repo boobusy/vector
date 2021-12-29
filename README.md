@@ -71,6 +71,6 @@ func main() {
 * [Vector](https://github.com/boobusy/vector/blob/master/examples/vector.go)
 
 ## author
-问题或者联系作者：十二楼五城
+问题或者建议联系作者：十二楼五城
 
 ![boobusy](http://boobusy.com/wechat.jpg)
