@@ -1,5 +1,5 @@
-//ago:build ignore
-// a+build ignore
+//go:build ignore
+// +build ignore
 
 package main
 
