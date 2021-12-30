@@ -6,9 +6,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/boobusy/vector"
 	"sync"
 	"time"
-	"github.com/boobusy/vector"
 )
 
 type Task struct {
@@ -39,8 +39,11 @@ func main() {
 	w.Wait()
 	fmt.Println(queue.IsEmpty(), queue.Len(), queue.Cap())
 
+	var val vector.Val
 	for !queue.IsEmpty() {
-		fmt.Println(queue.PopBack().(*Task).Id) // or fmt.Println(vector.PopFront())
+		val = queue.PopBack()
+		fmt.Println(val.(*Task).Id) // or fmt.Println(vector.PopFront())
 	}
+
 
 }
