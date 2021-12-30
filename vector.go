@@ -2,6 +2,7 @@ package vector
 
 import (
 	"runtime"
+	"sync"
 	"time"
 )
 
@@ -11,19 +12,23 @@ type (
 		size  int
 		r     chan struct{}
 		w     chan func()
+		purge *sync.Once
 	}
 
 	any = interface{}
 
 	Type = vector
+	Val  = any
 )
 
 func New(size int) *Type {
+
 	v := &vector{
 		items: make([]any, 0, size),
 		size:  size,
 		r:     make(chan struct{}, 0),
 		w:     make(chan func()),
+		purge: new(sync.Once),
 	}
 
 	go v.syncSliceData()
@@ -44,7 +49,13 @@ func (v *vector) Len() int {
 
 // Cap returns the capacity of items.
 func (v *vector) Cap() int {
-	return cap(v.items)
+	var l int
+	v.w <- func() {
+		defer v.rChan()
+		l = cap(v.items)
+	}
+	<-v.r
+	return l
 }
 
 func (v *vector) IsEmpty() bool {
@@ -64,10 +75,10 @@ func (v *vector) Push(item any) {
 }
 
 // Remake items size
-func (v *vector) Remake(items []any) {
+func (v *vector) Remake(size int) {
 	v.w <- func() {
-		v.items = nil
-		v.items = items
+		v.items = make([]any, 0, size)
+		v.size = size
 	}
 }
 
@@ -105,16 +116,19 @@ func (v *vector) PopBack() (w any) {
 }
 
 // open auto purge
-func (v *vector) UsePurge(maxSize int, interval time.Duration) {
-	go func() {
-		ch := time.NewTicker(interval)
-		for {
-			<-ch.C
-			if v.Len() == 0 && v.Cap() > maxSize {
-				v.Remake(make([]any, 0, v.size))
+func (v *vector) UsePurge(maxSize int, interval time.Duration) *Type {
+	v.purge.Do(func() {
+		go func() {
+			ch := time.NewTicker(interval)
+			for {
+				<-ch.C
+				if v.Len() == 0 && v.Cap() > maxSize {
+					v.Remake(v.size)
+				}
 			}
-		}
-	}()
+		}()
+	})
+	return v
 }
 
 func (v *vector) syncSliceData() {
