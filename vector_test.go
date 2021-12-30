@@ -26,27 +26,34 @@ func TestVectorOne(t *testing.T) {
 	t.Log("ok")
 }
 
-
 func TestVectorSlmple(t *testing.T) {
 
-	v := New(1000)
+	Remake(1000)
 
 	for i := 0; i < 100; i++ {
-		v.Push(rand.Int())
+		Push(rand.Int())
 	}
 
-	if v.Len() != 100 {
-		t.Fatal("len != 100. len:", v.Len())
+	if Len() != 100 {
+		t.Fatal("len != 100. len:", Len())
 	}
 
-	if v.Cap() != 1000 {
-		t.Fatal("cap != 1000")
+	if Cap() != 1000 {
+		t.Fatal("cap != 1000", Cap())
 	}
 
-	t.Log(v.IsEmpty(), v.Len(), v.Cap())
+	t.Log(IsEmpty(), Len(), Cap())
 
-	for !v.IsEmpty() {
-		v.PopBack()
+	for !IsEmpty() {
+		PopBack()
+	}
+
+	if PopBack() != nil {
+		t.Fatal("PopBack err")
+	}
+
+	if PopFront() != nil {
+		t.Fatal("PopFront err")
 	}
 
 	t.Log("ok")
@@ -90,30 +97,60 @@ func TestGoVectorSlmple(t *testing.T) {
 }
 
 func TestGoVectorPurge(t *testing.T) {
-	v := New(1000)
+
+	Remake(1000)
 
 	// auto clean
-	v.UsePurge(1000, 10*time.Millisecond)
+	UsePurge(1000, 10*time.Millisecond)
+	UsePurge(1000, 100*time.Millisecond)
+	UsePurge(1000, 1000*time.Millisecond)
 
 	for i := 0; i < 10000; i++ {
-		v.Push(i)
+		Push(i)
 	}
 
-	if v.Len() != 10000 {
-		t.Fatal("len error. len:", v.Len())
+	if Len() != 10000 {
+		t.Fatal("len error. len:", Len())
 	}
 
-	t.Log(v.Len(), v.Cap())
+	t.Log(Len(), Cap())
 
-	for !v.IsEmpty() {
-		v.PopFront()
+	for !IsEmpty() {
+		PopFront()
 	}
-
+	t.Log(Len(), Cap())
 	time.Sleep(30 * time.Millisecond)
-
-	if v.Cap() != 1000 {
-		t.Fatal("Purge error. cap:", v.Cap())
+	t.Log(Len(), Cap())
+	if Cap() != 1000 {
+		t.Fatal("Purge error. cap:", Cap())
 	}
+
+	t.Log("ok")
+}
+
+func TestGoVectorRemake(t *testing.T) {
+
+	v := New(100)
+	v.Remake(2000)
+	if v.Cap() != 2000 {
+		t.Fatal("make error. cap:", v.Cap())
+	}
+
+	t.Log("ok")
+}
+
+func TestVectorItems(t *testing.T) {
+
+	Push(1)
+	Push(2)
+	Push(3)
+	for i, v := range Items() {
+		t.Log(i, v)
+	}
+
+	var val Val
+	val = PopBack()
+	t.Log(val.(int))
 
 	t.Log("ok")
 }
