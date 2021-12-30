@@ -1,4 +1,11 @@
 This is an concurrent-queue and concurrent-stack lib for the go.
+
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/boobusy/vector.svg)](https://pkg.go.dev/github.com/boobusy/vector)
+![license](https://img.shields.io/github/license/boobusy/vector)
+[![GoCover](http://gocover.io/_badge/github.com/boobusy/vector)](http://gocover.io/github.com/boobusy/vector)
+![size](https://img.shields.io/github/languages/code-size/boobusy/vector)
+
 ***
   
 
@@ -14,7 +21,6 @@ import (
     "github.com/boobusy/vector"
 )
 ```
-
 
 ### Simple
 ```go
@@ -59,8 +65,10 @@ func main() {
 	w.Wait()
 	fmt.Println(queue.IsEmpty(), queue.Len(), queue.Cap())
 
+	var val vector.Val
 	for !queue.IsEmpty() {
-		fmt.Println(queue.PopBack().(*Task).Id) // or fmt.Println(vector.PopFront())
+        val = queue.PopBack()
+		fmt.Println(val.(*Task).Id) // or fmt.Println(vector.PopFront())
 	}
 
 }
