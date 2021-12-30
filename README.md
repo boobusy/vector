@@ -36,7 +36,8 @@ func main() {
 ```go
 func main() {
 
-	queue := vector.New(10000)
+    var queue *vector.Type = vector.New(10000)
+	//queue := vector.New(10000)
 
 	// auto clean
 	queue.UsePurge(1<<20, 100 * time.Millisecond)

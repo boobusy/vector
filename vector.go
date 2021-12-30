@@ -14,9 +14,11 @@ type (
 	}
 
 	any = interface{}
+
+	Type = vector
 )
 
-func New(size int) *vector {
+func New(size int) *Type {
 	v := &vector{
 		items: make([]any, 0, size),
 		size:  size,
@@ -34,7 +36,7 @@ func (v *vector) Len() int {
 	v.w <- func() {
 		defer v.rChan()
 
-		 l = len(v.items)
+		l = len(v.items)
 	}
 	<-v.r
 	return l
