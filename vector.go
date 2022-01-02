@@ -82,6 +82,26 @@ func (v *vector) Remake(size int) {
 	}
 }
 
+// Resize vector cap
+func (v *vector) Resize(size int) {
+	v.w <- func() {
+		vcap := cap(v.items)
+		if vcap > size {
+			v.items = v.items[:size]
+		} else if vcap < size {
+			v.items = append(make([]any, 0, size), v.items...)
+		}
+		v.size = size
+	}
+}
+
+// clear items
+func (v *vector) Clear() {
+	v.w <- func() {
+		v.items = v.items[:0]
+	}
+}
+
 // PopFront returns the first val of items.
 func (v *vector) PopFront() (w any) {
 	v.w <- func() {

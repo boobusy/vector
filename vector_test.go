@@ -154,3 +154,29 @@ func TestVectorItems(t *testing.T) {
 
 	t.Log("ok")
 }
+
+func TestVectorResize(t *testing.T) {
+
+	v := New(10)
+	for i := 0; i < 10; i++ {
+		v.Push(i)
+	}
+	v.Resize(20)
+	vals := v.Items()
+	for i := 0; i < 10; i++ {
+		if i != vals[i] {
+			t.Fatal("resize error!")
+		}
+	}
+	v.Resize(5)
+	if v.PopBack() != 4 {
+		t.Fatal("Resize error!")
+	}
+
+	v.Clear()
+	if v.Len() != 0 {
+		t.Fatal("Clear error!")
+	}
+
+	t.Log("ok")
+}
